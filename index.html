@@ -100,6 +100,14 @@
             display: block; text-align: center; border-radius: 10px;
             background: var(--text-main); color: var(--frame-bg);
         }
+
+        /* تأثير قلب ألوان الصورة جاهز مسبقاً */
+        .dark-mode #logo-img {
+            filter: invert(1) brightness(2);
+        }
+        #logo-img {
+            transition: all 0.4s ease;
+        }
     </style>
 </head>
 <body class="en">
@@ -123,7 +131,7 @@
             <div class="inline-block px-4 py-1 border border-black/10 bg-black/5 text-[10px] font-black tracking-[4px] uppercase mb-8 opacity-50">Certified Asset</div>
             
             <div class="flex justify-center mb-6">
-                <img src="43959.png" alt="ZLYXO" style="max-width: 400px; width: 85%; height: auto;">
+                <img id="logo-img" src="43959.png" alt="ZLYXO" style="max-width: 400px; width: 85%; height: auto;">
             </div>
 
             <p class="text-lg md:text-2xl var(--text-dim) font-bold mb-16 italic tracking-widest uppercase opacity-80" id="hero-sub">The Pinnacle of Modern Branding</p>
@@ -174,8 +182,6 @@
                             <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">A Universal Canvas</h3><p class="text-zinc-500 text-sm leading-relaxed">A "Chameleon Brand" perfectly neutral yet incredibly powerful for tech, luxury, or finance giants.</p></div>
                             <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">Visual Symmetry</h3><p class="text-zinc-500 text-sm leading-relaxed">With its balanced 5-letter structure, ZLYXO scales perfectly from small screens to massive billboards.</p></div>
                         </div>
-                        <div class="p-8 border border-current/10 bg-current/[0.02] rounded-xl"><h2 class="text-xl font-bold mb-2 uppercase italic">Digital Authority</h2><p class="text-zinc-500 text-sm leading-relaxed">The .com extension remains the undisputed king. Owning ZLYXO.com grants immediate "legacy status" and premium SEO advantages.</p></div>
-                        <div class="pt-8 border-t border-current/10"><h3 class="text-2xl font-black uppercase italic tracking-tighter mb-4">Strategic Advantage</h3><p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com is not merely a digital address; it is a high-yield investment and a definitive statement of intent.</p></div>
                     </div>`
             },
             ar: {
@@ -191,8 +197,6 @@
                             <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">لوحة عالمية</h3><p class="text-zinc-500 text-sm leading-relaxed">براند كالحرباء، قوي ومحايد، مثالي لعمالقة التكنولوجيا أو دور الأزياء الفاخرة.</p></div>
                             <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">التناظر البصري</h3><p class="text-zinc-500 text-sm leading-relaxed">هيكل مدمج من 5 أحرف، يتوسع بجمالية من شاشات الجوال الصغيرة إلى اللوحات الضخمة.</p></div>
                         </div>
-                        <div class="p-8 border border-current/10 bg-current/[0.02] rounded-xl"><h2 class="text-xl font-bold mb-2 uppercase italic">السلطة الرقمية المطلقة</h2><p class="text-zinc-500 text-sm leading-relaxed">يبقى امتداد .com هو الملك، وامتلاك ZLYXO.com يمنحك مكانة فورية وثقة عالمية.</p></div>
-                        <div class="pt-8 border-t border-current/10"><h3 class="text-2xl font-black uppercase italic tracking-tighter mb-4">الميزة الاستراتيجية</h3><p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com ليس مجرد عنوان؛ إنه استثمار عالي القيمة وبيان صريح للريادة.</p></div>
                     </div>`
             }
         };
@@ -218,11 +222,11 @@
         document.addEventListener('mousemove', (e) => {
             const x = (e.clientX - window.innerWidth/2) * 0.01;
             const y = (e.clientY - window.innerHeight/2) * 0.01;
-            document.getElementById('bg-text').style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+            const bgText = document.getElementById('bg-text');
+            if(bgText) bgText.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
         });
 
         setLang('en');
     </script>
 </body>
 </html>
-
