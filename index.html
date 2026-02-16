@@ -7,114 +7,153 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&family=Cairo:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&family=Cairo:wght@400;700;900&family=Orbitron:wght@900&display=swap');
         
         :root {
+            --bg: #d1d5db; 
+            --frame-bg: #e2e2e2;
+            --card: rgba(255, 255, 255, 0.4);
+            --text-main: #0a0a0a;
+            --text-dim: #71717a;
+            --border: rgba(0,0,0,0.1);
+            --stroke: rgba(0,0,0,0.08);
+        }
+
+        .dark-mode {
             --bg: #050505;
-            --card: #0f0f0f;
-            --accent: #ffffff;
+            --frame-bg: #0f0f0f;
+            --card: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
             --text-dim: #a1a1aa;
+            --border: rgba(255,255,255,0.1);
+            --stroke: rgba(255,255,255,0.05);
         }
 
         body { 
             background-color: var(--bg); 
-            color: #ffffff; 
-            -webkit-font-smoothing: antialiased;
+            color: var(--text-main); 
+            transition: background 0.4s ease, color 0.4s ease;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         
         .en { font-family: 'Plus Jakarta Sans', sans-serif; }
         .ar { font-family: 'Cairo', sans-serif; }
 
-        /* تدرج خلفية ناعم جداً للجوال */
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 80%);
-            z-index: -1;
+        .site-frame {
+            width: 95%;
+            max-width: 1400px;
+            margin: 2.5vh auto;
+            min-height: 95vh;
+            background: var(--frame-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.05);
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: background 0.4s ease;
+        }
+
+        .bg-title {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(5rem, 25vw, 15rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--stroke);
+            z-index: 0;
+            pointer-events: none;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
         }
 
         .glass-card {
             background: var(--card);
-            border: 1px solid #1f1f1f;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(40px);
         }
 
-        /* تحسين استجابة العناوين */
-        .main-title {
-            font-size: clamp(3.5rem, 15vw, 8rem);
-            line-height: 1;
-            letter-spacing: -0.05em;
-        }
+        .card-1 { animation: slideUp 0.8s 0.4s forwards; }
+        .card-2 { animation: slideUp 0.8s 0.6s forwards; }
+        .card-3 { animation: slideUp 0.8s 0.8s forwards; }
 
-        .lang-btn { 
-            padding: 6px 16px; border-radius: 4px; cursor: pointer; 
-            font-size: 10px; font-weight: 800; transition: 0.3s; 
-            border: 1px solid #222;
-        }
-        .lang-btn.active { background: #fff; color: #000; border-color: #fff; }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* الأزرار مستجيبة للمس */
+        .nav-btn { 
+            padding: 6px 14px; border-radius: 6px; cursor: pointer; 
+            font-size: 11px; font-weight: 800; transition: 0.3s; 
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .nav-btn.active { background: var(--text-main); color: var(--frame-bg); }
+
         .btn-action {
-            width: 100%;
-            padding: 1rem;
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: 0.3s;
-            display: block;
-            text-align: center;
+            width: 100%; padding: 1.1rem; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.4s;
+            display: block; text-align: center; border-radius: 10px;
+            background: var(--text-main); color: var(--frame-bg);
         }
     </style>
 </head>
-<body class="en min-h-screen">
-    <div class="bg-glow"></div>
+<body class="en">
 
-    <nav class="w-full max-w-7xl mx-auto px-5 py-6 flex justify-between items-center relative z-50">
-        <div class="text-xl font-black tracking-tighter italic">ZLYXO<span class="opacity-30">.com</span></div>
-        <div class="flex gap-1.5 bg-white/5 p-1 rounded-md border border-white/10">
-            <div id="btn-en" onclick="setLang('en')" class="lang-btn active">EN</div>
-            <div id="btn-ar" onclick="setLang('ar')" class="lang-btn">AR</div>
-        </div>
-    </nav>
+    <div class="site-frame">
+        <div class="bg-title" id="bg-text">ZLYXO</div>
 
-    <main class="w-full max-w-6xl mx-auto px-5 pt-8 md:pt-16 text-center relative z-10">
-        <div class="inline-block px-3 py-1 border border-white/10 bg-white/5 text-[9px] font-bold tracking-[3px] uppercase mb-6 text-white/50">
-            Certified Asset
-        </div>
-        
-        <h1 class="main-title font-black mb-4 italic uppercase">ZLYXO</h1>
-        <p class="text-base md:text-2xl text-zinc-500 font-light mb-12 italic tracking-wide px-4" id="hero-sub">The Pinnacle of Modern Branding</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-20">
-            <div class="glass-card p-8 rounded-xl flex flex-col justify-between order-2 md:order-1">
-                <div class="mb-6">
-                    <span class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest block mb-2">Direct Purchase</span>
-                    <div class="text-4xl font-bold italic">$2,300</div>
+        <nav class="w-full px-8 py-8 flex justify-between items-center relative z-50">
+            <div class="text-2xl font-black italic tracking-tighter" style="font-family: 'Orbitron';">ZLYXO<span class="opacity-30">.com</span></div>
+            <div class="flex gap-2 items-center">
+                <div class="flex gap-1 bg-black/5 p-1 rounded-lg border border-black/5">
+                    <div id="btn-en" onclick="setLang('en')" class="nav-btn active">EN</div>
+                    <div id="btn-ar" onclick="setLang('ar')" class="nav-btn">AR</div>
                 </div>
-                <a href="https://unstoppabledomains.com/d/zlyxo.com" target="_blank" class="btn-action bg-white text-black hover:bg-zinc-200">Buy Now</a>
+                <div onclick="toggleDark()" class="nav-btn bg-black/5"><i id="mode-icon" class="fas fa-moon"></i></div>
             </div>
+        </nav>
 
-            <div class="glass-card p-8 rounded-xl border-white/30 bg-white/[0.03] flex flex-col justify-between order-1 md:order-2 md:scale-105 shadow-2xl">
-                <div class="mb-6 text-left md:text-center">
-                    <span class="text-[9px] font-bold text-white uppercase tracking-widest block mb-2">Lease-to-Own</span>
-                    <div class="text-4xl font-bold italic">$153.34<span class="text-sm font-normal opacity-40">/mo</span></div>
-                    <p class="text-[9px] text-zinc-400 font-bold mt-2 uppercase italic tracking-tighter" id="d-lease-note">* 20% Down Payment Required</p>
+        <main class="w-full max-w-6xl mx-auto px-5 pt-12 text-center relative z-10">
+            <div class="inline-block px-4 py-1 border border-black/10 bg-black/5 text-[10px] font-black tracking-[4px] uppercase mb-8 opacity-50">Certified Asset</div>
+            
+            <h1 class="text-6xl md:text-9xl font-black mb-4 italic uppercase tracking-tighter" style="font-family: 'Orbitron';">ZLYXO</h1>
+            <p class="text-lg md:text-2xl var(--text-dim) font-bold mb-16 italic tracking-widest uppercase opacity-80" id="hero-sub">The Pinnacle of Modern Branding</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
+                <div class="glass-card card-1 p-10 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black opacity-40 uppercase tracking-widest block mb-3">Direct Purchase</span>
+                        <div class="text-5xl font-black italic">$2,300</div>
+                    </div>
+                    <a href="https://unstoppabledomains.com/d/zlyxo.com" target="_blank" class="btn-action mt-8">Buy Now</a>
                 </div>
-                <a href="https://unstoppabledomains.com/d/zlyxo.com" target="_blank" class="btn-action bg-white text-black hover:bg-zinc-200">Secure Domain</a>
-            </div>
 
-            <div class="glass-card p-8 rounded-xl flex flex-col justify-between order-3 md:order-3">
-                <div class="mb-6">
-                    <span class="text-[9px] font-bold text-zinc-600 uppercase tracking-widest block mb-2">Negotiations</span>
-                    <div class="text-2xl font-bold italic uppercase">Custom Offer</div>
+                <div class="glass-card card-2 p-10 rounded-2xl border-white/10 flex flex-col justify-between md:scale-105 shadow-xl">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-widest block mb-3">Lease-to-Own</span>
+                        <div class="text-5xl font-black italic">$153.34<span class="text-sm font-normal opacity-40">/mo</span></div>
+                        <p class="text-[9px] opacity-50 font-bold mt-4 uppercase italic" id="d-lease-note">* 20% Down Payment Required</p>
+                    </div>
+                    <a href="https://unstoppabledomains.com/d/zlyxo.com" target="_blank" class="btn-action mt-8">Secure Domain</a>
                 </div>
-                <a href="mailto:domainssellerking@gmail.com?subject=Offer for ZLYXO.com" class="btn-action border border-zinc-800 text-white hover:bg-white hover:text-black">Contact</a>
-            </div>
-        </div>
 
-        <div id="full-content" class="w-full max-w-4xl mx-auto pb-24 text-left px-2">
+                <div class="glass-card card-3 p-10 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-black opacity-40 uppercase tracking-widest block mb-3">Negotiations</span>
+                        <div class="text-2xl font-black italic uppercase">Custom Offer</div>
+                    </div>
+                    <a href="mailto:domainssellerking@gmail.com?subject=Offer for ZLYXO.com" class="btn-action mt-8 border-2 border-current bg-transparent !text-current">Contact</a>
+                </div>
             </div>
-    </main>
+
+            <div id="full-content" class="w-full max-w-4xl mx-auto pb-32"></div>
+        </main>
+    </div>
 
     <script>
         const content = {
@@ -124,26 +163,16 @@
                 lease_note: "* 20% Down Payment + Installments",
                 body: `
                     <div class="space-y-12">
-                        <section><p class="text-lg md:text-xl text-zinc-400 leading-relaxed font-light">Unlock a world of limitless potential with <strong class="text-white">ZLYXO.com</strong>, a premier 5-letter domain that embodies the essence of prestige and innovation. ZLYXO stands as a masterpiece of linguistic and visual engineering—bold and unforgettable.</p></section>
-                        
+                        <section><p class="text-lg md:text-xl text-zinc-500 leading-relaxed font-medium">Unlock a world of limitless potential with <strong class="text-current font-black">ZLYXO.com</strong>, a premier 5-letter domain that embodies the essence of prestige and innovation. ZLYXO stands as a masterpiece of linguistic and visual engineering—bold and unforgettable.</p></section>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">Linguistic Magnetism</h3><p class="text-zinc-500 text-sm leading-relaxed text-justify">ZLYXO is a rare phonetic gem. It begins with 'Z' and concludes with 'O', creating a "loop of memorability" that ensures your brand stays at the forefront.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">Power-Letter Signature</h3><p class="text-zinc-500 text-sm leading-relaxed text-justify">Integrating ‘Z’ and ‘X’ instantly signals authority, cutting-edge intelligence, and a futuristic mindset.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">A Universal Canvas</h3><p class="text-zinc-500 text-sm leading-relaxed text-justify">A "Chameleon Brand" perfectly neutral yet incredibly powerful for tech, luxury, or finance giants.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">Visual Symmetry</h3><p class="text-zinc-500 text-sm leading-relaxed text-justify">With its balanced 5-letter structure, ZLYXO scales perfectly from small screens to massive billboards.</p></div>
+                            <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">Linguistic Magnetism</h3><p class="text-zinc-500 text-sm leading-relaxed">ZLYXO is a rare phonetic gem. It begins with 'Z' and concludes with 'O', creating a "loop of memorability" that ensures your brand stays at the forefront.</p></div>
+                            <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">Power-Letter Signature</h3><p class="text-zinc-500 text-sm leading-relaxed">Integrating ‘Z’ and ‘X’ instantly signals authority, cutting-edge intelligence, and a futuristic mindset.</p></div>
+                            <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">A Universal Canvas</h3><p class="text-zinc-500 text-sm leading-relaxed">A "Chameleon Brand" perfectly neutral yet incredibly powerful for tech, luxury, or finance giants.</p></div>
+                            <div class="space-y-2 border-l-2 border-current pl-6"><h3 class="font-bold uppercase tracking-widest text-xs">Visual Symmetry</h3><p class="text-zinc-500 text-sm leading-relaxed">With its balanced 5-letter structure, ZLYXO scales perfectly from small screens to massive billboards.</p></div>
                         </div>
-
-                        <div class="p-8 border border-white/5 bg-white/[0.02] rounded-lg">
-                            <h2 class="text-xl font-bold text-white mb-2 uppercase italic">Digital Authority</h2>
-                            <p class="text-zinc-500 text-sm leading-relaxed">The .com extension remains the undisputed king. Owning ZLYXO.com grants immediate "legacy status" and premium SEO advantages.</p>
-                        </div>
-
-                        <div class="pt-8 border-t border-white/5">
-                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-4">Strategic Advantage</h3>
-                            <p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com is not merely a digital address; it is a high-yield investment and a definitive statement of intent.</p>
-                        </div>
-                    </div>
-                `
+                        <div class="p-8 border border-current/10 bg-current/[0.02] rounded-xl"><h2 class="text-xl font-bold mb-2 uppercase italic">Digital Authority</h2><p class="text-zinc-500 text-sm leading-relaxed">The .com extension remains the undisputed king. Owning ZLYXO.com grants immediate "legacy status" and premium SEO advantages.</p></div>
+                        <div class="pt-8 border-t border-current/10"><h3 class="text-2xl font-black uppercase italic tracking-tighter mb-4">Strategic Advantage</h3><p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com is not merely a digital address; it is a high-yield investment and a definitive statement of intent.</p></div>
+                    </div>`
             },
             ar: {
                 hero_sub: "قمة العلامات التجارية الحديثة",
@@ -151,41 +180,42 @@
                 lease_note: "* يتطلب 20% دفعة مقدمة + أقساط",
                 body: `
                     <div class="space-y-12">
-                        <section><p class="text-lg md:text-xl text-zinc-400 leading-relaxed font-light">أطلق العنان لإمكانات لا حدود لها مع <strong class="text-white">ZLYXO.com</strong>، النطاق المتميز الذي يجسد جوهر الهيبة والابتكار. يقف ZLYXO كتحفة هندسية لغوية وبصرية - جريئة ولا تُنسى.</p></section>
-                        
+                        <section><p class="text-lg md:text-xl text-zinc-500 leading-relaxed font-medium">أطلق العنان لإمكانات لا حدود لها مع <strong class="text-current font-black">ZLYXO.com</strong>، النطاق المتميز الذي يجسد جوهر الهيبة والابتكار. يقف ZLYXO كتحفة هندسية لغوية وبصرية - جريئة ولا تُنسى.</p></section>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">المغناطيسية اللغوية</h3><p class="text-zinc-500 text-sm leading-relaxed">ZLYXO جوهرة صوتية نادرة، تبدأ بحرف ‘Z’ وتنتهي بحرف ‘O’، مما يخلق حلقة ذاكرة تضمن بقاءك في المقدمة.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">توقيع الأحرف القوية</h3><p class="text-zinc-500 text-sm leading-relaxed">دمج حرفي ‘Z’ و ‘X’ يشير فوراً إلى السلطة والذكاء المتطور والعقلية المستقبلية.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">لوحة عالمية</h3><p class="text-zinc-500 text-sm leading-relaxed">براند كالحرباء، قوي ومحايد، مثالي لعمالقة التكنولوجيا أو دور الأزياء الفاخرة.</p></div>
-                            <div class="space-y-2"><h3 class="text-white font-bold uppercase tracking-widest text-xs">التناظر البصري</h3><p class="text-zinc-500 text-sm leading-relaxed">هيكل مدمج من 5 أحرف، يتوسع بجمالية من شاشات الجوال الصغيرة إلى اللوحات الضخمة.</p></div>
+                            <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">المغناطيسية اللغوية</h3><p class="text-zinc-500 text-sm leading-relaxed">ZLYXO جوهرة صوتية نادرة، تبدأ بحرف ‘Z’ وتنتهي بحرف ‘O’، مما يخلق حلقة ذاكرة تضمن بقاءك في المقدمة.</p></div>
+                            <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">توقيع الأحرف القوية</h3><p class="text-zinc-500 text-sm leading-relaxed">دمج حرفي ‘Z’ و ‘X’ يشير فوراً إلى السلطة والذكاء المتطور والعقلية المستقبلية.</p></div>
+                            <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">لوحة عالمية</h3><p class="text-zinc-500 text-sm leading-relaxed">براند كالحرباء، قوي ومحايد، مثالي لعمالقة التكنولوجيا أو دور الأزياء الفاخرة.</p></div>
+                            <div class="space-y-2 border-r-2 border-current pr-6"><h3 class="font-bold uppercase tracking-widest text-xs">التناظر البصري</h3><p class="text-zinc-500 text-sm leading-relaxed">هيكل مدمج من 5 أحرف، يتوسع بجمالية من شاشات الجوال الصغيرة إلى اللوحات الضخمة.</p></div>
                         </div>
-
-                        <div class="p-8 border border-white/5 bg-white/[0.02] rounded-lg">
-                            <h2 class="text-xl font-bold text-white mb-2 uppercase italic">السلطة الرقمية المطلقة</h2>
-                            <p class="text-zinc-500 text-sm leading-relaxed">يبقى امتداد .com هو الملك، وامتلاك ZLYXO.com يمنحك مكانة فورية وثقة عالمية.</p>
-                        </div>
-
-                        <div class="pt-8 border-t border-white/5">
-                            <h3 class="text-2xl font-black text-white uppercase italic tracking-tighter mb-4">الميزة الاستراتيجية</h3>
-                            <p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com ليس مجرد عنوان؛ إنه استثمار عالي القيمة وبيان صريح للريادة.</p>
-                        </div>
-                    </div>
-                `
+                        <div class="p-8 border border-current/10 bg-current/[0.02] rounded-xl"><h2 class="text-xl font-bold mb-2 uppercase italic">السلطة الرقمية المطلقة</h2><p class="text-zinc-500 text-sm leading-relaxed">يبقى امتداد .com هو الملك، وامتلاك ZLYXO.com يمنحك مكانة فورية وثقة عالمية.</p></div>
+                        <div class="pt-8 border-t border-current/10"><h3 class="text-2xl font-black uppercase italic tracking-tighter mb-4">الميزة الاستراتيجية</h3><p class="text-zinc-500 leading-relaxed text-base italic">ZLYXO.com ليس مجرد عنوان؛ إنه استثمار عالي القيمة وبيان صريح للريادة.</p></div>
+                    </div>`
             }
         };
+
+        function toggleDark() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('mode-icon').className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
 
         function setLang(lang) {
             const d = content[lang];
             document.getElementById('mainHtml').dir = d.dir;
-            document.body.className = lang + " min-h-screen";
+            document.body.className = lang + (document.body.classList.contains('dark-mode') ? ' dark-mode' : '');
             document.getElementById('hero-sub').innerText = d.hero_sub;
             document.getElementById('d-lease-note').innerText = d.lease_note;
-            const fullContent = document.getElementById('full-content');
-            fullContent.innerHTML = d.body;
-            fullContent.className = `w-full max-w-4xl mx-auto pb-24 ${d.align} px-2`;
+            const fc = document.getElementById('full-content');
+            fc.innerHTML = d.body;
+            fc.className = `w-full max-w-4xl mx-auto pb-32 ${d.align} px-2`;
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
             document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
         }
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX - window.innerWidth/2) * 0.01;
+            const y = (e.clientY - window.innerHeight/2) * 0.01;
+            document.getElementById('bg-text').style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+        });
 
         setLang('en');
     </script>
